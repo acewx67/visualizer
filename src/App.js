@@ -58,11 +58,6 @@ function App() {
     },150)
     
   }
-
-
-
-
-
   return (
     <div className="App">
       <div className="main_container">
