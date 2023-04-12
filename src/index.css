@@ -11,6 +11,7 @@
     gap : 5px;
 }
 .main_container{
+    margin-top: 20px;
     display: flex;
     justify-content: center;
     align-items: baseline;
