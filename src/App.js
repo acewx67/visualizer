@@ -1,9 +1,9 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 function App() {
   const [array, setArray] = useState([]);
-  const [earlyExit, setEarlyExit] = useState(false);
-  const [running, setRunning] = useState(false);
   const [slider, setSlider] = useState(30);
+  const idx = useRef(null);
+  const idx1 = useRef(null);
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -56,39 +56,38 @@ function App() {
   //     merge(arr, s, m, e, i + 1)
   //   , (++i)*100);
   // }
-  function bubbleSort(arr,slider) {
-    setRunning(true);
+  function bubbleSort(arr, slider) {
     for (let i = 0; i < arr.length - 1; i++) {
       setTimeout(() => {
+        idx.current = i;
         for (let j = i + 1; j < arr.length; j++) {
-          if (earlyExit == true) {
-            clearTimeout();
-            setEarlyExit(false);
-            return arr;
-          }
-          if (arr[j] < arr[i]) {
-            console.log(earlyExit);
-            let t = arr[i];
-            arr[i] = arr[j];
-            arr[j] = t;
-          }
+          setTimeout(()=>{
+            idx1.current = j;
+            if (arr[j] < arr[i]) {
+              let t = arr[i];
+              arr[i] = arr[j];
+              arr[j] = t;
+            }
+          },250)
         }
         setTimeout(() => setArray([...arr]), i * 0);
-      }, (i * 1000)*(1/slider));
+      }, i * 1500 * (1 / slider));
     }
-    setRunning(false);
+    idx.current = null;
+    idx1.current = null;
     return arr;
   }
 
   return (
     <div className="App">
-      
       <div className="main_container">
-        {array.map((num, idx) => {
+        {array.map((num, i) => {
           return (
             <div
-              className="arr_num"
-              style={{ height: `${num}px` }}
+              className={idx.current == i ? 'index' : idx1.current == i ? 'compared_index' : 'arr_num'}
+              style={
+                { height: `${num}px`, }
+              }
               key={idx}
             ></div>
           );
@@ -96,32 +95,21 @@ function App() {
       </div>
       <div className="btns" style={{ display: "flex", gap: "20px" }}>
         <button onClick={resetArray}>Generate new Array</button>
-        {/* <button onClick={()=>{mergeSort([...array],0,array.length-1,0)}}>MergeSort</button> */}
         <button
           onClick={() => {
-            if (!earlyExit && !running) {
-              setRunning(true);
-              var var_slider = slider;
-              bubbleSort(array,var_slider);
-            } else {
-              setEarlyExit(true);
-            }
+            bubbleSort(array, slider);
           }}
         >
           BubbleSort
         </button>
-      <input type="range" min="1" max="100" onChange={(e)=>{
-        setSlider(e.target.value)
-        }}/>
-      {console.log(slider)}
-        <button
-          onClick={() => {
-            setEarlyExit(true);
-            setTimeout(() => setEarlyExit(false), 2000);
+        <input
+          type="range"
+          min="1"
+          max="100"
+          onChange={(e) => {
+            setSlider(e.target.value);
           }}
-        >
-          Abort Sorting
-        </button>
+        />
       </div>
     </div>
   );

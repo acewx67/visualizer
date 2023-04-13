@@ -23,3 +23,13 @@
     background-color: skyblue;
 
 }
+.index{
+    width:2px;
+    margin : 0 1px;
+    background-color: red;
+}
+.compared_index{
+    width:2px;
+    margin : 0 1px;
+    background-color: green;
+}
